@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracker de Compras para Reducir Gastos Innecesarios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+        h2 {
+            color: #AC7912;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #AC7912;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #AC7912;
+            color: white;
+        }
+        input[type="text"], input[type="number"] {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        select {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #AC7912;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #936b0e;
+        }
+        #ahorro {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Tracker de Compras para Reducir Gastos Innecesarios</h2>
+
+<table id="tablaProductos">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio Unitario ($)</th>
+            <th>Total ($)</th>
+            <th>¿Fue útil?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Filas de ejemplo -->
+        <tr>
+            <td><input type="text" name="producto"></td>
+            <td><input type="number" name="cantidad" min="1" value="1"></td>
+            <td><input type="number" name="precio" step="0.01" min="0.01"></td>
+            <td><span>0.00</span></td>
+            <td>
+                <select name="util">
+                    <option value="si">Sí</option>
+                    <option value="no">No</option>
+                </select>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<button type="button" onclick="agregarFila()">Agregar Producto</button>
+<button type="button" onclick="calcularTotales()">Calcular Totales</button>
+
+<div id="ahorro"></div>
+
+<script>
+    function agregarFila() {
+        var tablaProductos = document.getElementById('tablaProductos').getElementsByTagName('tbody')[0];
+        var nuevaFila = tablaProductos.insertRow(tablaProductos.rows.length);
+
+        var html = `
+            <td><input type="text" name="producto"></td>
+            <td><input type="number" name="cantidad" min="1" value="1"></td>
+            <td><input type="number" name="precio" step="0.01" min="0.01"></td>
+            <td><span>0.00</span></td>
+            <td>
+                <select name="util">
+                    <option value="si">Sí</option>
+                    <option value="no">No</option>
+                </select>
+            </td>
+        `;
+        nuevaFila.innerHTML = html;
+    }
+
+    function calcularTotales() {
+        var filas = document.getElementById('tablaProductos').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        var totalGeneral = 0;
+        var ahorroPotencial = 0;
+
+        for (var i = 0; i < filas.length; i++) {
+            var cantidad = parseInt(filas[i].getElementsByTagName('input')[1].value);
+            var precio = parseFloat(filas[i].getElementsByTagName('input')[2].value);
+            var total = cantidad * precio;
+            filas[i].getElementsByTagName('span')[0].textContent = total.toFixed(2);
+            totalGeneral += total;
+
+            var utilidad = filas[i].getElementsByTagName('select')[0].value;
+            if (utilidad === 'no') {
+                ahorroPotencial += total;
+            }
+        }
+
+        var ahorroHTML = `<p>Se podría haber ahorrado un total de <strong>$${ahorroPotencial.toFixed(2)}</strong> si no se hubiera gastado en cosas innecesarias.</p>`;
+        document.getElementById('ahorro').innerHTML = ahorroHTML;
+    }
+</script>
+
+</body>
+</html>

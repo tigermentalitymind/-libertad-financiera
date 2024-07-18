@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planificación Financiera</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+        h2 {
+            color: #AC7912;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #AC7912;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #AC7912;
+            color: white;
+        }
+        input[type="text"], input[type="number"], input[type="date"] {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #AC7912;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #936b0e;
+        }
+        #totales {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Planificación Financiera</h2>
+
+<h3>Ingresos</h3>
+<table id="tablaIngresos">
+    <thead>
+        <tr>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Monto ($)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Filas de ejemplo -->
+        <tr>
+            <td><input type="text" name="descripcionIngreso"></td>
+            <td><input type="date" name="fechaIngreso"></td>
+            <td><input type="number" name="montoIngreso" step="0.01" min="0.01"></td>
+        </tr>
+    </tbody>
+</table>
+
+<button type="button" onclick="agregarFila('ingreso')">Agregar Ingreso</button>
+
+<h3>Gastos</h3>
+<table id="tablaGastos">
+    <thead>
+        <tr>
+            <th>Descripción</th>
+            <th>Fecha</th>
+            <th>Monto ($)</th>
+            <th>¿Es Necesario?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Filas de ejemplo -->
+        <tr>
+            <td><input type="text" name="descripcionGasto"></td>
+            <td><input type="date" name="fechaGasto"></td>
+            <td><input type="number" name="montoGasto" step="0.01" min="0.01"></td>
+            <td>
+                <select name="necesario">
+                    <option value="si">Sí</option>
+                    <option value="no">No</option>
+                </select>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<button type="button" onclick="agregarFila('gasto')">Agregar Gasto</button>
+<button type="button" onclick="calcularTotales()">Calcular Totales</button>
+
+<div id="totales"></div>
+
+<script>
+    function agregarFila(tipo) {
+        var tabla, nuevaFila, html;
+        if (tipo === 'ingreso') {
+            tabla = document.getElementById('tablaIngresos').getElementsByTagName('tbody')[0];
+            nuevaFila = tabla.insertRow(tabla.rows.length);
+            html = `
+                <td><input type="text" name="descripcionIngreso"></td>
+                <td><input type="date" name="fechaIngreso"></td>
+                <td><input type="number" name="montoIngreso" step="0.01" min="0.01"></td>
+            `;
+        } else if (tipo === 'gasto') {
+            tabla = document.getElementById('tablaGastos').getElementsByTagName('tbody')[0];
+            nuevaFila = tabla.insertRow(tabla.rows.length);
+            html = `
+                <td><input type="text" name="descripcionGasto"></td>
+                <td><input type="date" name="fechaGasto"></td>
+                <td><input type="number" name="montoGasto" step="0.01" min="0.01"></td>
+                <td>
+                    <select name="necesario">
+                        <option value="si">Sí</option>
+                        <option value="no">No</option>
+                    </select>
+                </td>
+            `;
+        }
+        nuevaFila.innerHTML = html;
+    }
+
+    function calcularTotales() {
+        var ingresos = document.getElementById('tablaIngresos').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        var gastos = document.getElementById('tablaGastos').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        
+        var totalIngresos = 0;
+        for (var i = 0; i < ingresos.length; i++) {
+            var montoIngreso = parseFloat(ingresos[i].getElementsByTagName('input')[2].value);
+            totalIngresos += montoIngreso;
+        }
+
+        var totalGastos = 0;
+        var totalGastosInnecesarios = 0;
+        for (var j = 0; j < gastos.length; j++) {
+            var montoGasto = parseFloat(gastos[j].getElementsByTagName('input')[2].value);
+            totalGastos += montoGasto;
+            var necesario = gastos[j].getElementsByTagName('select')[0].value;
+            if (necesario === 'no') {
+                totalGastosInnecesarios += montoGasto;
+            }
+        }
+
+        var totalAhorro = totalIngresos - totalGastos;
+        var ahorroPotencial = totalAhorro + totalGastosInnecesarios;
+
+        var totalesHTML = `
+            <p>Total de Ingresos: <strong>$${totalIngresos.toFixed(2)}</strong></p>
+            <p>Total de Gastos: <strong>$${totalGastos.toFixed(2)}</strong></p>
+            <p>Ahorro Neto: <strong>$${totalAhorro.toFixed(2)}</strong></p>
+            <p>Ahorro Potencial sin Gastos Innecesarios: <strong>$${ahorroPotencial.toFixed(2)}</strong></p>
+        `;
+        document.getElementById('totales').innerHTML = totalesHTML;
+    }
+</script>
+
+</body>
+</html>

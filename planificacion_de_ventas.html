@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planificación de Ventas con Consejos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+        h2, h3 {
+            color: #AC7912;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #AC7912;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #AC7912;
+            color: white;
+        }
+        input[type="text"], input[type="number"], input[type="date"] {
+            padding: 8px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #AC7912;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #936b0e;
+        }
+        #totales {
+            margin-top: 20px;
+        }
+        .consejos {
+            background-color: #FFF3E0;
+            border: 1px solid #AC7912;
+            padding: 10px;
+            margin-top: 20px;
+        }
+        .consejos ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .consejos ul li {
+            margin-bottom: 10px;
+        }
+        .consejos ul li label {
+            display: flex;
+            align-items: center;
+        }
+        .consejos ul li input[type="checkbox"] {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Planificación de Ventas con Consejos</h2>
+
+<h3>Productos para Vender</h3>
+<table id="tablaProductos">
+    <thead>
+        <tr>
+            <th>Producto</th>
+            <th>Cantidad a Vender</th>
+            <th>Precio Unitario ($)</th>
+            <th>Total Estimado ($)</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Filas de ejemplo -->
+        <tr>
+            <td><input type="text" name="producto"></td>
+            <td><input type="number" name="cantidad" min="1" value="1"></td>
+            <td><input type="number" name="precio" step="0.01" min="0.01"></td>
+            <td><span>0.00</span></td>
+        </tr>
+    </tbody>
+</table>
+
+<button type="button" onclick="agregarFila()">Agregar Producto</button>
+<button type="button" onclick="calcularTotales()">Calcular Totales</button>
+
+<div id="totales"></div>
+
+<div class="consejos">
+    <h3>Consejos para Vender Más y Ganar Más Dinero</h3>
+    <ul>
+        <li><label><input type="checkbox">Conoce a tu cliente: Investiga y entiende las necesidades y deseos de tu cliente objetivo.</label></li>
+        <li><label><input type="checkbox">Ofrece valor: Asegúrate de que tu producto o servicio resuelve un problema o mejora la vida del cliente.</label></li>
+        <li><label><input type="checkbox">Destaca los beneficios: Enfócate en los beneficios de tu producto en lugar de sus características.</label></li>
+        <li><label><input type="checkbox">Desarrolla relaciones: Construye y mantén relaciones sólidas con tus clientes para fomentar la lealtad.</label></li>
+        <li><label><input type="checkbox">Usa testimonios: Los testimonios y las reseñas positivas pueden aumentar la confianza en tu producto.</label></li>
+        <li><label><input type="checkbox">Utiliza técnicas de persuasión: Aplica principios de persuasión como la escasez, la reciprocidad y la autoridad.</label></li>
+        <li><label><input type="checkbox">Establece metas claras: Define objetivos de ventas específicos y realiza un seguimiento de tu progreso.</label></li>
+        <li><label><input type="checkbox">Ofrece promociones y descuentos: Atrae a nuevos clientes y recompensa a los clientes leales con ofertas especiales.</label></li>
+        <li><label><input type="checkbox">Capacítate continuamente: Mejora tus habilidades de ventas a través de la educación continua y la práctica.</label></li>
+        <li><label><input type="checkbox">Escucha activamente: Presta atención a las preocupaciones y comentarios de tus clientes para adaptar tu enfoque.</label></li>
+        <li><label><input type="checkbox">Prepara presentaciones efectivas: Practica tus presentaciones de ventas para ser claro y convincente.</label></li>
+        <li><label><input type="checkbox">Usa datos para mejorar: Analiza los datos de ventas para identificar patrones y oportunidades de mejora.</label></li>
+    </ul>
+</div>
+
+<script>
+    function agregarFila() {
+        var tablaProductos = document.getElementById('tablaProductos').getElementsByTagName('tbody')[0];
+        var nuevaFila = tablaProductos.insertRow(tablaProductos.rows.length);
+
+        var html = `
+            <td><input type="text" name="producto"></td>
+            <td><input type="number" name="cantidad" min="1" value="1"></td>
+            <td><input type="number" name="precio" step="0.01" min="0.01"></td>
+            <td><span>0.00</span></td>
+        `;
+        nuevaFila.innerHTML = html;
+    }
+
+    function calcularTotales() {
+        var filas = document.getElementById('tablaProductos').getElementsByTagName('tbody')[0].getElementsByTagName('tr');
+        var totalEstimadoGeneral = 0;
+
+        for (var i = 0; i < filas.length; i++) {
+            var cantidad = parseInt(filas[i].getElementsByTagName('input')[1].value);
+            var precio = parseFloat(filas[i].getElementsByTagName('input')[2].value);
+            var totalEstimado = cantidad * precio;
+            filas[i].getElementsByTagName('span')[0].textContent = totalEstimado.toFixed(2);
+            totalEstimadoGeneral += totalEstimado;
+        }
+
+        var totalesHTML = `<p>Total Estimado de Ventas: <strong>$${totalEstimadoGeneral.toFixed(2)}</strong></p>`;
+        document.getElementById('totales').innerHTML = totalesHTML;
+    }
+</script>
+
+</body>
+</html>
